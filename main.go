@@ -3,8 +3,8 @@ package main
 import (
 	"flag"
 	"log"
-	"time"
 	"os/exec"
+	"time"
 )
 
 func performJob(job string) error {
@@ -17,28 +17,40 @@ func performJob(job string) error {
 	return err
 }
 
+func run(job string) {
+	log.Println("perform the job!")
+	for {
+		if err := performJob(job); err == nil {
+			break
+		}
+		time.Sleep(time.Minute)
+	}
+}
+
 func main() {
 	var hour = flag.Int("hour", -1, "hour to run the command")
 	var job = flag.String("job", "", "job, like \"echo 1\" ")
 	flag.Parse()
 	log.Printf("\n hour: %d \n job: %s \n", *hour, *job)
-	
-	if *hour < 0 || *hour > 23 {
-		log.Fatal("wrong hour, must be 0-23")
-	}
+
 	if len(*job) == 0 {
 		log.Fatal("job must be set")
 	}
-	
+
+	if *hour == -1 {
+		run(*job)
+		return
+	}
+
+	if *hour < 0 || *hour > 23 {
+		log.Fatal("wrong hour, must be 0-23")
+	}
+
 	c := time.Tick(time.Second)
 	for now := range c {
 		h, m, s := now.Clock()
 		if h == *hour && m == 0 && s == 0 {
-			log.Println("perform the job!")
-			for err := performJob(*job); err!= nil; {
-				time.Sleep(time.Minute)
-				err = performJob(*job)
-			}
+			run(*job)
 		}
 	}
 }
