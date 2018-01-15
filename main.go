@@ -19,7 +19,7 @@ func performJob(job string) error {
 
 func run(job string) {
 	log.Println("perform the job!")
-	for {
+	for try := 3; try > 0; try-- {
 		if err := performJob(job); err == nil {
 			break
 		}
