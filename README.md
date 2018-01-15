@@ -4,7 +4,6 @@ Very simple 50 line cron daemon for one job only
 
  * synchronously - only one job at one time
  * only daily mode - between 0-23h
- * if job exits with error the daemon will try again until it will success
  * all output to stdout/error
  
 ##### Motivation:
